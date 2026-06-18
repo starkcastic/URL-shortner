@@ -6,7 +6,7 @@ const connectDB = require('./db');
 const urlRoutes = require('./routes/urlRoutes');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // connect to the database
 connectDB();
@@ -14,9 +14,10 @@ connectDB();
 // middleware
 app.use(bodyParser.json());
 
-//middleware to serv static files
-app.use('/', urlRoutes);
+// serve static frontend files first, so they aren't swallowed by the
+// wildcard GET /:shortUrl route below
 app.use(express.static('public'));
+app.use('/', urlRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
